@@ -12,15 +12,22 @@ def submit():
 		status.set("Invalid symbol")
 	else:
 		status.set("Valid symbol")
-		# url = "https://api.tradier.com/v1/markets/quotes?symbols=" + symbol
-		# headers = {"Accept": "application/json", "Authorization": "Bearer YOUR_ACCESS_TOKEN"}
-		# request = urllib2.Request(url, headers)
-		# connection = urllib2.urlopen(request)
-		# data = connection.read()
-		# quote = json.load(data)
+		
+		
+		
+		url = "https://sandbox.tradier.com/v1/markets/quotes?symbols=" + symbol
+		print(url)
+		
+		
+		request = urllib2.Request(url)
+		request.add_header("Accept", "application/json")
+		request.add_header("Authorization", "Bearer TSCALKvrKOHFY1VH05ML7oMBbil4")
+		connection = urllib2.urlopen(request)
+		
+		quote = json.load(connection)
+		quote = quote["quotes"]["quote"]
 		for key in data_fields:
-			print(key)
-			data_fields[key].set(key)
+			data_fields[key].set(quote[key])
 
 # creates window
 root = Tk()
