@@ -24,6 +24,8 @@ def submit():
 
 # creates window
 root = Tk()
+root.minsize(450, 250)
+root.title("TradeNet")
 
 # input fields
 input_lbl = Label(root, text = "Enter symbol: ")
