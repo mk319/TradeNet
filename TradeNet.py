@@ -3,11 +3,26 @@ import urllib2
 import json
 
 # valid symbols
-symbol_set = ["FB", "AAPL", "GOOG", "MSFT", "CRM", "TWTR", "BABA", "SPY", "QQQ", "DIA"]
+_symbol_set = ["FB", "AAPL", "GOOG", "MSFT", "CRM", "TWTR", "BABA", "SPY", "QQQ", "DIA"]
 
-# submit button command
-def submit():
+# ----- Model -----
+class Quote:
+
+	def __init__(self, data):
+		self.data = data["quotes"]["quote"]
+		
+	def get_field(self, field):
+		return self.data[field]
+		
+	def fill_display(self, fields):
+		for key in fields:
+			fields[key].set(self.data[key])
+			
+# ----- Controller -----
+def fetch_quote():
+
 	symbol = input_txt.get()
+	
 	if not symbol in symbol_set:
 		status.set("Invalid symbol")
 	else:
@@ -17,12 +32,11 @@ def submit():
 		request.add_header("Accept", "application/json")
 		request.add_header("Authorization", "Bearer TSCALKvrKOHFY1VH05ML7oMBbil4")
 		connection = urllib2.urlopen(request)
-		quote = json.load(connection)
-		quote = quote["quotes"]["quote"]
-		for key in data_fields:
-			data_fields[key].set(quote[key])
+		data = json.load(connection)
+		quote = Quote(data)
+		quote.fill_display(data_fields)
 
-# creates window
+# ----- View -----
 root = Tk()
 root.minsize(450, 250)
 root.title("TradeNet")
@@ -34,7 +48,7 @@ input_lbl.grid(row = 0, column = 0, sticky = E)
 input_txt = Entry(root)
 input_txt.grid(row = 0, column = 1)
 
-submit_btn = Button(root, text = "Submit", command = submit)
+submit_btn = Button(root, text = "Submit", command = fetch_quote)
 submit_btn.grid(row = 0, column = 2, padx = 5)
 
 status = StringVar()
