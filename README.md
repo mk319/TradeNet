@@ -1,3 +1,8 @@
+• Create a Data Model (Physical) View (ER Diagram) for customer account, portfolio and stock
+transactions
+
+• Extend any diagrams as needed (e.g., UML class diagrams) to include functionality described below
+
 Establish and create Account Management (AM) Server database to store at minimum:
 
 • Customer information (ID, first name, address, account balance, current profit and loss)
