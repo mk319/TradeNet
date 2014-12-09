@@ -31,6 +31,84 @@ class API:
 		data = json.load(connection)
 		self.quote = Quote(data)
 
+
+class Transaction:
+
+	def __init__(self):
+		self.window = Tk()
+		self.window.title("Transaction Log")
+		purl = ""
+		ptype = "application/json"
+		self.build()
+
+	def build(self):
+		input_lbl = Label(self.window, text = "User ID: ")
+		input_lbl.grid(row = 0, column = 0, sticky = E)
+
+		input_txt = Entry(self.window)
+		input_txt.grid(row = 0, column = 1)
+		self.window.input_txt = input_txt
+
+		submit_btn = Button(self.window, text = "Submit", command = self.submit)
+		submit_btn.grid(row = 0, column = 2, padx = 5)
+
+		Log = Label(self.window, text = "Log: ").grid(row = 5, column = 0, sticky = E)
+
+		i = 3
+		logs = []
+		for x in logs:
+			stock_txt = StringVar()
+			stock_lbl = Label(self.window, textvariable = stock_txt)
+			stock_lbl.grid(row = i, column = 1, sticky = W, columnspan = 3)
+			i = i + 1
+		
+		
+
+	def submit(self):
+		return
+
+class Portfolio:
+
+	def __init__(self):
+		self.window = Tk()
+		self.window.title("Portfolio")
+		purl = ""
+		ptype = "application/json"
+		self.build()
+
+	def build(self):
+		input_lbl = Label(self.window, text = "User ID: ")
+		input_lbl.grid(row = 0, column = 0, sticky = E)
+
+		input_txt = Entry(self.window)
+		input_txt.grid(row = 0, column = 1)
+		self.window.input_txt = input_txt
+
+		submit_btn = Button(self.window, text = "Submit", command = self.submit)
+		submit_btn.grid(row = 0, column = 2, padx = 5)
+
+		balancelabel = Label(self.window, text = "Balance: ").grid(row = 2, column = 0, sticky = E)
+
+		balance_txt = StringVar()
+		balance_lbl = Label(self.window, textvariable = balance_txt)
+		balance_lbl.grid(row = 2, column = 1, sticky = W, columnspan = 3)
+
+		stockslabel = Label(self.window, text = "Stocks: ").grid(row = 5, column = 0, sticky = E)
+
+		i = 6
+		listofstocks = []
+		for x in listofstocks:
+			stock_txt = StringVar()
+			stock_lbl = Label(self.window, textvariable = stock_txt)
+			stock_lbl.grid(row = i, column = 1, sticky = W, columnspan = 3)
+			i = i + 1
+		
+		
+
+	def submit(self):
+		return
+            
+    
 # ----- View -----
 class GUI:
 
@@ -43,7 +121,12 @@ class GUI:
 		self.window.mainloop()
 		
 	def portfoliocmd(self):
-		portfolio = Tk()
+		portfolio = Portfolio()
+
+		
+	def transactioncmd(self):
+		trans = Transaction()
+		
 		return
 		
 	
@@ -55,6 +138,12 @@ class GUI:
 			self.status.set("Valid symbol")
 			self.api.fetch_quote(symbol)
 			self.fill_display(self.api.quote)
+
+	def buy(self):
+		return
+
+	def sell(self):
+		return
 			
 	def trade(self):
 		id = self.id_txt.get()
@@ -66,6 +155,9 @@ class GUI:
 	def build_widgets(self, window):
 		menubar = Menu(self.window)
 		menubar.add_command(label="Portfolio", command = self.portfoliocmd)
+		self.window.config(menu=menubar)
+		
+		menubar.add_command(label="Transaction Log", command = self.transactioncmd)
 		self.window.config(menu=menubar)
 	
 		# input fields
@@ -83,77 +175,98 @@ class GUI:
 		output_lbl = Label(self.window, textvariable = self.status, width = 15, anchor = W)
 		output_lbl.grid(row = 0, column = 3)
 
+		#buy and sell
+		id_lbl = Label(self.window, text = "Enter ID: ")
+		id_lbl.grid(row = 1, column = 0, sticky = E)
+
+		id_txt = Entry(self.window)
+		id_txt.grid(row = 1, column = 1)
+		self.id_txt = id_txt
+
+		quantity_lbl = Label(self.window, text = "Enter Quantity: ")
+		quantity_lbl.grid(row = 1, column = 2, sticky = E)
+
+		quantity_txt = Entry(self.window)
+		quantity_txt.grid(row = 1, column = 3)
+		self.quantity_txt = quantity_txt
+
+		buy_btn = Button(self.window, text = "Buy", command = self.buy)
+		buy_btn.grid(row = 1, column = 4, padx = 0)
+
+		sell_btn = Button(self.window, text = "Sell", command = self.sell)
+		sell_btn.grid(row = 1, column = 5, padx = 0)
+
 		# quote display fields
 		self.data_fields = {}
 
 		symbol_txt = StringVar()
 		symbol_l = Label(self.window, text = "Symbol: ")
-		symbol_l.grid(row = 1, sticky = E)
+		symbol_l.grid(row = 2, sticky = E)
 		symbol_lbl = Label(self.window, textvariable = symbol_txt)
-		symbol_lbl.grid(row = 1, column = 1, sticky = W, columnspan = 3)
+		symbol_lbl.grid(row = 2, column = 1, sticky = W, columnspan = 3)
 		self.data_fields["symbol"] = symbol_txt
 
 		description_txt = StringVar()
 		description_l = Label(self.window, text = "Description: ")
-		description_l.grid(row = 2, sticky = E)
+		description_l.grid(row = 3, sticky = E)
 		description_lbl = Label(self.window, textvariable = description_txt)
-		description_lbl.grid(row = 2, column = 1, sticky = W, columnspan = 3)
+		description_lbl.grid(row = 3, column = 1, sticky = W, columnspan = 3)
 		self.data_fields["description"] = description_txt
 
 		exch_txt = StringVar()
 		exch_l = Label(self.window, text = "Exchange: ")
-		exch_l.grid(row = 3, sticky = E)
+		exch_l.grid(row = 4, sticky = E)
 		exch_lbl = Label(self.window, textvariable = exch_txt)
-		exch_lbl.grid(row = 3, column = 1, sticky = W, columnspan = 3)
+		exch_lbl.grid(row = 4, column = 1, sticky = W, columnspan = 3)
 		self.data_fields["exch"] = exch_txt
 
 		close_txt = StringVar()
 		close_l = Label(self.window, text = "Closing Price: ")
-		close_l.grid(row = 4, sticky = E)
+		close_l.grid(row = 5, sticky = E)
 		close_lbl = Label(self.window, textvariable = close_txt)
-		close_lbl.grid(row = 4, column = 1, sticky = W, columnspan = 3)
+		close_lbl.grid(row = 5, column = 1, sticky = W, columnspan = 3)
 		self.data_fields["close"] = close_txt
 
 		change_txt = StringVar()
 		change_l = Label(self.window, text = "Daily Net Change: ")
-		change_l.grid(row = 5, sticky = E)
+		change_l.grid(row = 6, sticky = E)
 		change_lbl = Label(self.window, textvariable = change_txt)
-		change_lbl.grid(row = 5, column = 1, sticky = W, columnspan = 3)
+		change_lbl.grid(row = 6, column = 1, sticky = W, columnspan = 3)
 		self.data_fields["change"] = change_txt
 
 		change_percentage_txt = StringVar()
 		change_percentage_l = Label(self.window, text = "Daily Net Change Percentage: ")
-		change_percentage_l.grid(row = 6, sticky = E)
+		change_percentage_l.grid(row = 7, sticky = E)
 		change_percentage_lbl = Label(self.window, textvariable = change_percentage_txt)
-		change_percentage_lbl.grid(row = 6, column = 1, sticky = W, columnspan = 3)
+		change_percentage_lbl.grid(row = 7, column = 1, sticky = W, columnspan = 3)
 		self.data_fields["change_percentage"] = change_percentage_txt
 
 		volume_txt = StringVar()
 		volume_l = Label(self.window, text = "Volume: ")
-		volume_l.grid(row = 7, sticky = E)
+		volume_l.grid(row = 8, sticky = E)
 		volume_lbl = Label(self.window, textvariable = volume_txt)
-		volume_lbl.grid(row = 7, column = 1, sticky = W, columnspan = 3)
+		volume_lbl.grid(row = 8, column = 1, sticky = W, columnspan = 3)
 		self.data_fields["volume"] = volume_txt
 
 		average_volume_txt = StringVar()
 		average_volume_l = Label(self.window, text = "Average Volume: ")
-		average_volume_l.grid(row = 8, sticky = E)
+		average_volume_l.grid(row = 9, sticky = E)
 		average_volume_lbl = Label(self.window, textvariable = average_volume_txt)
-		average_volume_lbl.grid(row = 8, column = 1, sticky = W, columnspan = 3)
+		average_volume_lbl.grid(row = 9, column = 1, sticky = W, columnspan = 3)
 		self.data_fields["average_volume"] = average_volume_txt
 
 		week_52_high_txt = StringVar()
 		week_52_high_l = Label(self.window, text = "52 Week High: ")
-		week_52_high_l.grid(row = 9, sticky = E)
+		week_52_high_l.grid(row = 10, sticky = E)
 		week_52_high_lbl = Label(self.window, textvariable = week_52_high_txt)
-		week_52_high_lbl.grid(row = 9, column = 1, sticky = W, columnspan = 3)
+		week_52_high_lbl.grid(row = 10, column = 1, sticky = W, columnspan = 3)
 		self.data_fields["week_52_high"] = week_52_high_txt
 
 		week_52_low_txt = StringVar()
 		week_52_low_l = Label(self.window, text = "52 Week Low: ")
-		week_52_low_l.grid(row = 10, sticky = E)
+		week_52_low_l.grid(row = 11, sticky = E)
 		week_52_low_lbl = Label(self.window, textvariable = week_52_low_txt)
-		week_52_low_lbl.grid(row = 10, column = 1, sticky = W, columnspan = 3)
+		week_52_low_lbl.grid(row = 11, column = 1, sticky = W, columnspan = 3)
 		self.data_fields["week_52_low"] = week_52_low_txt
 
 app = GUI()
