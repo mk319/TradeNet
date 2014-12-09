@@ -36,12 +36,17 @@ class GUI:
 
 	def __init__(self):
 		self.window = Tk()
-		self.window.minsize(450, 250)
+		self.window.minsize(460, 240)
 		self.window.title("TradeNet")
-		self.build_widgets()
+		self.build_widgets(self.window)
 		self.api = API()
 		self.window.mainloop()
 		
+	def portfoliocmd(self):
+		portfolio = Tk()
+		return
+		
+	
 	def submit(self):
 		symbol = self.input_txt.get()
 		if not symbol in _symbol_set:
@@ -51,11 +56,18 @@ class GUI:
 			self.api.fetch_quote(symbol)
 			self.fill_display(self.api.quote)
 			
+	def trade(self):
+		id = self.id_txt.get()
+			
 	def fill_display(self, quote):
 		for key in self.data_fields:
 			self.data_fields[key].set(quote[key])
 	
-	def build_widgets(self):
+	def build_widgets(self, window):
+		menubar = Menu(self.window)
+		menubar.add_command(label="Portfolio", command = self.portfoliocmd)
+		self.window.config(menu=menubar)
+	
 		# input fields
 		input_lbl = Label(self.window, text = "Enter symbol: ")
 		input_lbl.grid(row = 0, column = 0, sticky = E)
@@ -71,7 +83,7 @@ class GUI:
 		output_lbl = Label(self.window, textvariable = self.status, width = 15, anchor = W)
 		output_lbl.grid(row = 0, column = 3)
 
-		# display fields
+		# quote display fields
 		self.data_fields = {}
 
 		symbol_txt = StringVar()
