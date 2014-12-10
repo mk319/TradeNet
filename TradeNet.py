@@ -56,9 +56,10 @@ class Transaction:
 		Log = Label(self.window, text = "Log: ").grid(row = 2, column = 0, sticky = E)
 		logbox = Listbox(self.window, width = 50)
 		logbox.grid(row=4,column = 0, columnspan = 3)
+		logbox.insert(END, "Code    Shares    Purchase Price    Date")
 		logs = None
 		for log in logs:
-			logstring =  log["stock"]+ "\t" + log["shares"] + "\t" + log["datetime"]
+			logstring =  log["stock"]+ "    " + log["shares"] + "    " + log["purchaseprice"] + "    " + log["datetime"]
 			logbox.insert(END, logstring)
 				
 	def submit(self):
@@ -103,10 +104,13 @@ class Portfolio:
 
 		stockbox = Listbox(self.window, width = 50)
 		stockbox.grid(row=4,column = 0, columnspan = 3)
+		stockbox.insert(END, "Code    Shares    Current Price    Current Value")
+		api = API()
 		
 		self.listofstocks = None
 		for stock in self.listofstocks:
-			stockstring =  stock["stock"]+ "\t" + stock["shares"] + "\t" + stock["purchaseprice"]
+			api.fetchquote(stock["stock"])
+			stockstring =  stock["stock"]+ "    " + stock["shares"] + "    " + api.quote["close"] + "    " + api.quote["close"]*stock["shares"]
 			stockbox.insert(END, stockstring)
 				
 			
