@@ -161,29 +161,27 @@ class GUI:
 			self.fill_display(self.api.quote)
 
 	def buy(self):
-		user = id_txt.get()
-		quantity = quantity_txt.get()
+		user = self.id_txt.get()
+		quantity = self.quantity_txt.get()
 		
-		buyurl = "" + user + "?" + quantity
+		buyurl = "pluto.cse.msstate.edu:1045/TradeNet_war/BuyStock?user=" + user + "&quantity=" + quantity
 		request = urllib2.Request(buyurl)
 		request.add_header("Accept", "application/json")
 		connection = urllib2.urlopen(request)
 		self.data = json.load(connection)
 		reply = self.data
-				
 		return
 
 	def sell(self):
-		user = id_txt.get()
-		quantity = quantity_txt.get()
+		user = self.id_txt.get()
+		quantity = self.quantity_txt.get()
 		
-		sellurl = "" + user + "?" + quantity
+		sellurl = "pluto.cse.msstate.edu:1045/TradeNet_war/SellStock?user=" + user + "&quantity=" + quantity
 		request = urllib2.Request(sellurl)
 		request.add_header("Accept", "application/json")
 		connection = urllib2.urlopen(request)
 		self.data = json.load(connection)
 		reply = self.data
-		
 		return
 			
 	def trade(self):
