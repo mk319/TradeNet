@@ -32,13 +32,14 @@ class API:
 		self.quote = Quote(data)
 
 
+# ----- Transaction Log Window -----
 class Transaction:
 
 	def __init__(self):
 		self.window = Tk()
 		self.window.title("Transaction Log")
-		purl = ""
-		ptype = "application/json"
+		self.turl = ""
+		self.ttype = "application/json"
 		self.build()
 
 	def build(self):
@@ -47,33 +48,38 @@ class Transaction:
 
 		input_txt = Entry(self.window)
 		input_txt.grid(row = 0, column = 1)
-		self.window.input_txt = input_txt
+		self.input_txt = input_txt
 
 		submit_btn = Button(self.window, text = "Submit", command = self.submit)
 		submit_btn.grid(row = 0, column = 2, padx = 5)
 
-		Log = Label(self.window, text = "Log: ").grid(row = 5, column = 0, sticky = E)
-
-		i = 3
-		logs = []
-		for x in logs:
-			stock_txt = StringVar()
-			stock_lbl = Label(self.window, textvariable = stock_txt)
-			stock_lbl.grid(row = i, column = 1, sticky = W, columnspan = 3)
-			i = i + 1
-		
-		
-
+		Log = Label(self.window, text = "Log: ").grid(row = 2, column = 0, sticky = E)
+		logbox = Listbox(self.window, width = 50)
+		logbox.grid(row=4,column = 0, columnspan = 3)
+		logs = None
+		for log in logs:
+			logstring =  log["stock"]+ "\t" + log["shares"] + "\t" + log["datetime"]
+			logbox.insert(END, logstring)
+				
 	def submit(self):
+		lurl = self.turl + self.input_txt.get()
+		lrequest = urllib2.Request(lurl)
+		lrequest.add_header("Accept", self.ttype)
+		lconnection = urllib2.urlopen(lrequest)
+		self.data = json.load(lconnection)
+		self.logs = self.data
 		return
 
+
+# ----- Portfolio Window -----
 class Portfolio:
 
 	def __init__(self):
 		self.window = Tk()
 		self.window.title("Portfolio")
-		purl = ""
-		ptype = "application/json"
+		self.balanceurl = ""
+		self.type = "application/json"
+		self.stockurl = ""
 		self.build()
 
 	def build(self):
@@ -82,7 +88,7 @@ class Portfolio:
 
 		input_txt = Entry(self.window)
 		input_txt.grid(row = 0, column = 1)
-		self.window.input_txt = input_txt
+		self.input_txt = input_txt
 
 		submit_btn = Button(self.window, text = "Submit", command = self.submit)
 		submit_btn.grid(row = 0, column = 2, padx = 5)
@@ -91,23 +97,38 @@ class Portfolio:
 
 		balance_txt = StringVar()
 		balance_lbl = Label(self.window, textvariable = balance_txt)
-		balance_lbl.grid(row = 2, column = 1, sticky = W, columnspan = 3)
+		balance_lbl.grid(row = 2, column = 1, sticky = W)
 
-		stockslabel = Label(self.window, text = "Stocks: ").grid(row = 5, column = 0, sticky = E)
+		stockslabel = Label(self.window, text = "Stocks: ").grid(row = 3, column = 0, sticky = E)
 
-		i = 6
-		listofstocks = []
-		for x in listofstocks:
-			stock_txt = StringVar()
-			stock_lbl = Label(self.window, textvariable = stock_txt)
-			stock_lbl.grid(row = i, column = 1, sticky = W, columnspan = 3)
-			i = i + 1
+		stockbox = Listbox(self.window, width = 50)
+		stockbox.grid(row=4,column = 0, columnspan = 3)
+		
+		self.listofstocks = None
+		for stock in self.listofstocks:
+			stockstring =  stock["stock"]+ "\t" + stock["shares"] + "\t" + stock["purchaseprice"]
+			stockbox.insert(END, stockstring)
+				
+			
 		
 		
 
 	def submit(self):
-		return
-            
+		burl = self.balanceurl + self.input_txt.get()
+		brequest = urllib2.Request(burl)
+		brequest.add_header("Accept", self.type)
+		bconnection = urllib2.urlopen(brequest)
+		self.data = json.load(bconnection)
+		self.balance = self.data["accountbalance"]
+		balance_txt = self.balance
+
+		surl = self.stockurl + self.input_txt.get()
+		srequest = urllib2.Request(surl)
+		srequest.add_header("Accept", self.type)
+		sconnection = urllib2.urlopen(srequest)
+		self.data = json.load(sconnection)
+		self.listofstocks = self.data
+		            
     
 # ----- View -----
 class GUI:
@@ -177,24 +198,24 @@ class GUI:
 
 		#buy and sell
 		id_lbl = Label(self.window, text = "Enter ID: ")
-		id_lbl.grid(row = 1, column = 0, sticky = E)
+		id_lbl.grid(row = 12, column = 0, sticky = E)
 
 		id_txt = Entry(self.window)
-		id_txt.grid(row = 1, column = 1)
+		id_txt.grid(row = 12, column = 1)
 		self.id_txt = id_txt
 
 		quantity_lbl = Label(self.window, text = "Enter Quantity: ")
-		quantity_lbl.grid(row = 1, column = 2, sticky = E)
+		quantity_lbl.grid(row = 12, column = 2, sticky = E)
 
 		quantity_txt = Entry(self.window)
-		quantity_txt.grid(row = 1, column = 3)
+		quantity_txt.grid(row = 12, column = 3)
 		self.quantity_txt = quantity_txt
 
 		buy_btn = Button(self.window, text = "Buy", command = self.buy)
-		buy_btn.grid(row = 1, column = 4, padx = 0)
+		buy_btn.grid(row = 12, column = 4, padx = 0)
 
 		sell_btn = Button(self.window, text = "Sell", command = self.sell)
-		sell_btn.grid(row = 1, column = 5, padx = 0)
+		sell_btn.grid(row = 12, column = 5, padx = 0)
 
 		# quote display fields
 		self.data_fields = {}
