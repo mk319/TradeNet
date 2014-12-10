@@ -161,9 +161,29 @@ class GUI:
 			self.fill_display(self.api.quote)
 
 	def buy(self):
+		user = id_txt.get()
+		quantity = quantity_txt.get()
+		
+		buyurl = "" + user + "?" + quantity
+		request = urllib2.Request(buyurl)
+		request.add_header("Accept", "application/json")
+		connection = urllib2.urlopen(request)
+		self.data = json.load(connection)
+		reply = self.data
+				
 		return
 
 	def sell(self):
+		user = id_txt.get()
+		quantity = quantity_txt.get()
+		
+		sellurl = "" + user + "?" + quantity
+		request = urllib2.Request(sellurl)
+		request.add_header("Accept", "application/json")
+		connection = urllib2.urlopen(request)
+		self.data = json.load(connection)
+		reply = self.data
+		
 		return
 			
 	def trade(self):
